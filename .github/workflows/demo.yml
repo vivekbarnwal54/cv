@@ -1,0 +1,33 @@
+name: Demo CI/CD Pipeline
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Lint code
+        run: |
+          echo "Linting code..."
+          echo "✓ Lint passed"
+  
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tests
+        run: |
+          echo "Running test suite..."
+          sleep 3
+          echo "❌ FAILED: Test 'api_health_check' failed"
+          echo "❌ FAILED: Test 'database_connection' failed"
+          exit 1
+  
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: echo "Deploying... (this won't run)"
